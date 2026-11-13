@@ -1,0 +1,213 @@
+---
+title: "EDAwithR"
+author: "John Tapia"
+date: "2026-11-13"
+output:
+  github_document:
+    pandoc_args: ["--wrap=none"]
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## **10.3.3 Exercises**
+
+### **Exercise 1) Explore the distribution of each of the x, y, and z variables in diamonds**
+
+Use the tidyverse library
+
+```{r}
+library(nycflights13);
+library(tidyverse)
+```
+
+```{r}
+# Selected the x,y,z colums from the diamonds dataset and created a new table with 2 columns. First column is named dimensions and it has all the x,y,z's in one column. The second column has the actual value in mm of that dimension. Shaped this way to make facet_wrap easier to work with since its then able to group the columns value based off the dimension and create the same graph for each one.
+dimensions <- diamonds |>
+  select(x, y, z) |>
+  pivot_longer(everything(), names_to = "dimension", values_to = "mm")
+
+# Added scales = "free" to get an idea of outliers for each individual one 
+
+ggplot(dimensions, aes(x = mm)) +
+  geom_histogram(binwidth = 0.1, boundary = 0) +
+  facet_wrap(vars(dimension), ncol = 3, scales = "free") +
+  labs(x = "Dimension (mm)", y = "Number of diamonds")
+```
+
+It seems like y and z have more extreme outliers to the right of its distribution while x has some outlier/s to th left of its distribution.
+
+I now used coor_cartesian in order to get a better look at the distributions shape
+
+```{r}
+
+ggplot(dimensions, aes(x = mm)) +
+  geom_histogram(binwidth = 0.1, boundary = 0) +
+  facet_wrap(vars(dimension), ncol = 3) +
+  coord_cartesian(xlim = c(2, 12)) +
+  labs(x = "Dimension (mm)", y = "Number of diamonds")
+
+```
+
+### **What do you learn? Think about a diamond and how you might decide which dimension is the length, width, and depth.**
+
+The distribution of x and y look similar. Most measurements fall between 4 and 8 mm and have many peaks. The z measurements are smaller, most being between 2.5 and 5 mm. I would argue that x and y, looking from above, are the length and width of the diamond. The z measurement is most likely the dept as a diamonds depth does not tend to usually be bigger than the other measurements.
+
+### **Exercise 2) Explore the distribution of price.**
+
+```{r}
+
+a = 100
+b= 500
+c = 1000
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(
+    data = transform(diamonds, bin_width = c),
+    binwidth = c, boundary = 0
+  ) +
+  geom_histogram(
+    data = transform(diamonds, bin_width = b),
+    binwidth = b, boundary = 0
+  ) +
+  geom_histogram(
+    data = transform(diamonds, bin_width = a),
+    binwidth = a, boundary = 0
+  ) +
+  facet_wrap(~ bin_width, nrow = 1,scales='free') +  
+  labs(x = "Price (USD)", y = "Number of diamonds")
+
+
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 10, boundary = 0) +
+  coord_cartesian(xlim = c(300, 2500))
+
+```
+
+### **Do you discover anything unusual or surprising? (Hint: Carefully think about the binwidth and make sure you try a wide range of values.)**
+
+I tested the binwidth 100,500 and 1000. Diamond prices are strongly right skewed. Most diamonds are concentrated around the lower price range, possibly lower than \$2000. It can be hard to see so I created another plot that really zooms in and uses binwidth of 10. It seems most diamonds fall between \$ 500 and \$1000, the most are somewhere in between. The spikes and dips are more apparent with a bin of 10 using coord_cartesian. One unusual thing is that there are no prices around the \$1500 range, completely empty.
+
+### **Exercise 3) How many diamonds are 0.99 carat? How many are 1 carat? What do you think is the cause of the difference?**
+
+Based off the number of rows in each table below, there are 23 diamonds that are 0.99 carat and 1558 diamonds that are 1 carat. Looking at the prices alongside the columns shows that there may be more demand for 1 carat diamonds then 0.99. They go for more so they would probably stock more 1 carat then 0.99.
+
+```{r}
+
+diamond_carat_99 <- diamonds |> 
+  filter(carat == 0.99) |> 
+  select(price,carat) |>
+  arrange(carat)
+diamond_carat_99
+
+
+diamond_carat_1 <- diamonds |> 
+  filter(carat == 1) |> 
+  select(price,carat) |>
+  arrange(carat)
+diamond_carat_1
+
+
+```
+
+### **Exercise 4) Compare and contrast coord_cartesian() vs. xlim() or ylim() when zooming in on a histogram**
+
+Comparing limits and coord_cartesian
+
+```{r}
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 10, boundary = 0) +
+  coord_cartesian(xlim=c(0,5000),ylim = c(0, 400))
+
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 10, boundary = 0) +
+  xlim(0,5000) +
+  ylim(0,400)
+
+```
+
+Looking at default bindwidth
+
+```{r}
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram() +
+  coord_cartesian(xlim=c(0,5000))
+
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram() +
+  xlim(0,5000) 
+```
+
+### **What happens if you leave binwidth unset? What happens if you try and zoom so only half a bar shows?**
+
+For the first two graphs we see that adding x and y limits actually gets rid of the data outside of the range, which would affect its distribution and future analysis. We can zoom in to only see half the bar that goes past 400 using either coord-cartesian or y limit. Coord-cartesian does not eliminate that bar, but y limit does. If we try to leave binwidth unset, it uses a default of bins=30. If we use a x limit it calculates bins using the restricted range.
+
+## **10.4.1 Exercises**
+
+### **Exercise 1) What happens to missing values in a histogram? What happens to missing values in a bar chart? Why is there a difference in how missing values are handled in histograms and bar charts?**
+
+After creating NA rows for the column y and cut, I plotted the graphs. The two histograms are before and after Na's were added. As can be seen the histogram does not use the NAs for the distribution, there are no such bars since its not numeric. Assuming the bar chart is categorical(which for the most part should be), it just creates a new bar for the NA values. Just counts it as a separate group. Its different because one is continious while the other is categorical.
+
+```{r}
+diamonds2 <- diamonds |> 
+  mutate(y = if_else(y < 3 | y > 20, NA, y))
+
+ggplot(diamonds, aes(x = y)) + 
+  geom_histogram(binwidth = .1)
+
+ggplot(diamonds2, aes(x = y)) + 
+  geom_histogram(binwidth = .1)
+
+diamonds_cut <- diamonds |>
+  mutate(cut = if_else(row_number() <= 500, NA, cut))
+
+ggplot(diamonds_cut, aes(x = cut)) +
+  geom_bar() +
+  labs(x = "Diamond cut", y = "Number of diamonds")
+```
+
+### **Exercise 2) What does na.rm = TRUE do in mean() and sum()?**
+
+As can be seen in the mean and sum outputs below, the na.rm=TRUE tells mean() and sum() to skip the missing values when calculating their respective values.
+
+```{r}
+mean(diamonds2$y)
+mean(diamonds2$y,na.rm=TRUE)
+
+sum(diamonds2$y)
+sum(diamonds2$y,na.rm=TRUE)
+```
+
+### **Exercise 3) Recreate the frequency plot of scheduled_dep_time colored by whether the flight was cancelled or not. Also facet by the cancelled variable. Experiment with different values of the scales variable in the faceting function to mitigate the effect of more non-cancelled flights than cancelled flights.**
+
+Using scales = "free_y" gave each panel its own y-axis, making the pattern for cancelled flights easier to see. Both groups had their highest count around 3 p.m., and cancelled flights showed several smaller peaks later in the afternoon and evening. Because the panels use different y-axis scales, I read the axis labels to compare actual counts. Its not as easy to compare them to each other without looking at the axis, but it helps spot trends within their owb group.
+
+```{r}
+
+
+flight_times <- nycflights13::flights |>
+  mutate(
+    cancelled = is.na(dep_time),
+    scheduled_dep_time = (sched_dep_time %/% 100) +
+      (sched_dep_time %% 100) / 60
+  )
+
+
+departure_plot <- ggplot(
+  flight_times,
+  aes(x = scheduled_dep_time, color = cancelled)
+) +
+  geom_freqpoly(binwidth = 0.25, boundary = 0) +
+  labs(
+    x = "Scheduled departure hour",
+    y = "Number of flights per 15-minute bin",
+    color = "Cancelled"
+  )
+
+departure_plot
+
+departure_plot +
+  facet_wrap(~ cancelled, ncol = 1, scales = "free_y") +
+  labs(title = "Separate y-axes")
+```
