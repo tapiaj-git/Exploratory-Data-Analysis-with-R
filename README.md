@@ -22,13 +22,13 @@ Use the tidyverse library
     ## ✖ dplyr::lag()    masks stats::lag()
     ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 It seems like y and z have more extreme outliers to the right of its distribution while x has some outlier/s to th left of its distribution.
 
 I now used coor_cartesian in order to get a better look at the distributions shape
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ### **What do you learn? Think about a diamond and how you might decide which dimension is the length, width, and depth.**
 
@@ -36,7 +36,7 @@ The distribution of x and y look similar. Most measurements fall between 4 and 8
 
 ### **Exercise 2) Explore the distribution of price.**
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](EDAwithR_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ### **Do you discover anything unusual or surprising? (Hint: Carefully think about the binwidth and make sure you try a wide range of values.)**
 
@@ -80,7 +80,7 @@ Based off the number of rows in each table below, there are 23 diamonds that are
 
 Comparing limits and coord_cartesian
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
     ## Warning: Removed 14714 rows containing non-finite outside the scale range
     ## (`stat_bin()`).
@@ -88,13 +88,13 @@ Comparing limits and coord_cartesian
     ## Warning: Removed 1 row containing missing values or values outside the scale range
     ## (`geom_bar()`).
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 Looking at default bindwidth
 
     ## `stat_bin()` using `bins = 30`. Pick better value `binwidth`.
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
     ## `stat_bin()` using `bins = 30`. Pick better value `binwidth`.
 
@@ -104,7 +104,7 @@ Looking at default bindwidth
     ## Warning: Removed 2 rows containing missing values or values outside the scale range
     ## (`geom_bar()`).
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ### **What happens if you leave binwidth unset? What happens if you try and zoom so only half a bar shows?**
 
@@ -116,12 +116,12 @@ For the first two graphs we see that adding x and y limits actually gets rid of 
 
 After creating NA rows for the column y and cut, I plotted the graphs. The two histograms are before and after Na’s were added. As can be seen the histogram does not use the NAs for the distribution, there are no such bars since its not numeric. Assuming the bar chart is categorical(which for the most part should be), it just creates a new bar for the NA values. Just counts it as a separate group. Its different because one is continious while the other is categorical.
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
     ## Warning: Removed 9 rows containing non-finite outside the scale range
     ## (`stat_bin()`).
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->![](EDAwithR_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](figure-gfm/unnamed-chunk-8-2.png)<!-- -->![](figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ### **Exercise 2) What does na.rm = TRUE do in mean() and sum()?**
 
@@ -139,4 +139,4 @@ As can be seen in the mean and sum outputs below, the na.rm=TRUE tells mean() an
 
 Using scales = “free_y” gave each panel its own y-axis, making the pattern for cancelled flights easier to see. Both groups had their highest count around 3 p.m., and cancelled flights showed several smaller peaks later in the afternoon and evening. Because the panels use different y-axis scales, I read the axis labels to compare actual counts. Its not as easy to compare them to each other without looking at the axis, but it helps spot trends within their owb group.
 
-![](EDAwithR_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->![](EDAwithR_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](figure-gfm/unnamed-chunk-10-1.png)<!-- -->![](figure-gfm/unnamed-chunk-10-2.png)<!-- -->
