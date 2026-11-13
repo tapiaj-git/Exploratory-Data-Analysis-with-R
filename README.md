@@ -7,21 +7,6 @@ John Tapia
 
 ### **Exercise 1) Explore the distribution of each of the x, y, and z variables in diamonds**
 
-Use the tidyverse library
-
-    ## Warning: package 'nycflights13' was built under R version 4.6.2
-
-    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.2.1     ✔ readr     2.2.0
-    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
-    ## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
-    ## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-    ## ✔ purrr     1.2.2     
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
 ![](figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 It seems like y and z have more extreme outliers to the right of its distribution while x has some outlier/s to th left of its distribution.
